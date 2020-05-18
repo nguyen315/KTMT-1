@@ -14,4 +14,5 @@ int main() {
 	delete b;
 	cout << "LOL" << endl;
 	cout << "test branch" << endl;
+	cout << "Nguyen test branch 2" << endl;
 }
