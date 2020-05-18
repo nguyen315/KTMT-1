@@ -138,9 +138,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="constant.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Number.h" />
+    <ClInclude Include="QInt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
