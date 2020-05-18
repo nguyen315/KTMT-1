@@ -10,10 +10,15 @@ int main() {
 	cout << a->getBinaryType() << endl;
 	b = new QInt(10, "14");
 	cout << b->getBinaryType() << endl;
+	cout << "LONG" << endl;
 	delete a;
 	delete b;
 	cout << "LOL" << endl;
 	cout << "test branch" << endl;
+
+	cout << "Test Branch Long" << end
+
 	cout << "Nguyen test branch 2" << endl;
 	cout << "Nguyen test branch 3" << endl;
+
 }
