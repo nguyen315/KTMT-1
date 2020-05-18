@@ -10,6 +10,7 @@ int main() {
 	cout << a->getBinaryType() << endl;
 	b = new QInt(10, "14");
 	cout << b->getBinaryType() << endl;
+	cout << "LONG" << endl;
 	delete a;
 	delete b;
 }
