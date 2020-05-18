@@ -12,4 +12,5 @@ int main() {
 	cout << b->getBinaryType() << endl;
 	delete a;
 	delete b;
+	cout << "test branch" << endl;
 }
