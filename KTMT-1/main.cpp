@@ -13,4 +13,5 @@ int main() {
 	cout << "LONG" << endl;
 	delete a;
 	delete b;
+	cout << "test branch" << endl;
 }
