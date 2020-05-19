@@ -1,25 +1,29 @@
 #include "Constants.h"
 #include "QInt.h"
 #include <iostream>
+#include <bitset>
 
 using namespace std;
 
 int main() {
-	QInt* a, * b;
+	/*QInt* a, * b;
 	a = new QInt(2, "111100000");
 	cout << a->getBinaryType() << endl;
 	b = new QInt(10, "14");
 	cout << b->getBinaryType() << endl;
-	cout << "LONG" << endl;
 	delete a;
-	delete b;
-	cout << "LOL" << endl;
-	cout << "test branch" << endl;
+	delete b;*/
+	/*cout << Number::getTwoPowerX(0);*/
+	// test Number::sum
+	/*cout << Number::sum("666", "456");*/
 
-	cout << "Test Branch Long" << endl;
-	cout << "Test branch Nam" << endl;
+	// test getDecimal
+	QInt* a;
+	a = new QInt(10, "-1000");
+	cout << a->getBinaryType() << endl;
+	cout << a->getDecimalType() << endl;
 
-	cout << "Nguyen test branch 2" << endl;
-	cout << "Nguyen test branch 3" << endl;
+	// test Number::subtract
+	/*cout << Number::subtract("10024", "369");*/
 
 }
