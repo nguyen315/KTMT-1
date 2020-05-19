@@ -19,7 +19,7 @@ int main() {
 
 	// test getDecimal
 	QInt* a;
-	a = new QInt(10, "-1000");
+	a = new QInt(10, "-10");
 	cout << a->getBinaryType() << endl;
 	cout << a->getDecimalType() << endl;
 
