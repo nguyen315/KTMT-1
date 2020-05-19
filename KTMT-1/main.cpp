@@ -21,5 +21,6 @@ int main() {
 
 	cout << "Nguyen test branch 2" << endl;
 	cout << "Nguyen test branch 3" << endl;
-
+	a->rol(3);
+	return 0;
 }

@@ -32,15 +32,23 @@ string QInt::getDecimalType()
 
 void QInt::rol(int x) {
 	vector<bool>::iterator head;
-	bool ele = arrBits.at(0);
-	head = arrBits.begin();
-	arrBits.erase(head);
-	arrBits.push_back(ele);
+	for (int i = 0; i < x; i++) {
+		bool ele = arrBits.at(0);
+		head = arrBits.begin();
+		arrBits.erase(head);
+		arrBits.push_back(ele);
+	}
 }
 void QInt::ror(int x) {
 	vector<bool>::iterator tail;
-	tail = arrBits.end();
-	bool ele = arrBits.at(arrBits.size() - 1);
-	arrBits.pop_back();
-	arrBits.insert(tail, ele);
+	for (int i = 0; i < x; i++) {
+		tail = arrBits.end();
+		bool ele = arrBits.at(arrBits.size() - 1);
+		arrBits.pop_back();
+		arrBits.insert(tail, ele);
+	}
+}
+
+void QInt:: operator << (int x) {
+
 }
