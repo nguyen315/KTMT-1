@@ -29,3 +29,18 @@ string QInt::getDecimalType()
 	
 	return decimalString;
 }
+
+void QInt::rol(int x) {
+	vector<bool>::iterator head;
+	bool ele = arrBits.at(0);
+	head = arrBits.begin();
+	arrBits.erase(head);
+	arrBits.push_back(ele);
+}
+void QInt::ror(int x) {
+	vector<bool>::iterator tail;
+	tail = arrBits.end();
+	bool ele = arrBits.at(arrBits.size() - 1);
+	arrBits.pop_back();
+	arrBits.insert(tail, ele);
+}
