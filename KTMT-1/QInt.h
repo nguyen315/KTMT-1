@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
+#include "Constants.h"
 #include "Number.h"
 
 using namespace std;
