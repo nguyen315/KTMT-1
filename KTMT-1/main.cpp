@@ -16,7 +16,8 @@ int main() {
 	cout << "LOL" << endl;
 	cout << "test branch" << endl;
 
-	cout << "Test Branch Long" << end
+	cout << "Test Branch Long" << endl;
+	cout << "Test branch Nam" << endl;
 
 	cout << "Nguyen test branch 2" << endl;
 	cout << "Nguyen test branch 3" << endl;
