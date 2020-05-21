@@ -25,24 +25,75 @@ string QInt::getBinaryType()
 
 string QInt::getDecimalType()
 {
-	string decimalString;
-	
+	string result;
+	bool isNegative = false;
+	// Trường hợp là số 0
+	if (arrBits.size() == 1 && arrBits[0] == 0) {
+		result = "0";
+		return result;
+	}
+
+	// Nếu là số âm thì lấy bù 2 lại để thành số dương
+	if (arrBits.size() == Constants::maxLength && arrBits[0]) { 
+		isNegative = true;
+		Number::toTwoComplement(arrBits);
+	}
+	// Đưa số dương tương ứng vào result
 	for (int i = arrBits.size() - 1; i >= 0; i--) {
-		if (arrBits.size() - i == Constants::maxLength) break; // trường hợp có bit thứ 128 --> có thể là số âm
 		if (arrBits[i]) {
 			string temp = Number::getTwoPowerX(arrBits.size() - 1 - i);
-			decimalString = Number::sum(decimalString, temp);
+			result = Number::sum(result, temp);
 		}
 	}
-	if ((arrBits.size() == Constants::maxLength) && arrBits[0]) { // trường hợp số âm
-		string temp = Number::getTwoPowerX(Constants::maxLength - 1);
-		// Lấy số âm ở bit cao nhất này trừ cho kết quả trên
-		decimalString = Number::subtract(temp, decimalString);
-		// Đổi dấu lại thành dấu âm
-		decimalString.insert(0, 1, '-');
 
+	// Nếu là số âm thì thêm dấu trừ phía trước
+	if (isNegative)
+		result.insert(0, 1, '-');
+
+	return result;
+}
+
+string QInt::getHexaType() {
+	string result, bin;
+	bool isNegative = false;
+	char hex;
+
+	// Nếu là số âm thì lấy bù 2 lại để thành số dương
+	if ((arrBits.size() == Constants::maxLength) && arrBits[0]) {
+		isNegative = true;
+		Number::toTwoComplement(arrBits);
 	}
-	return decimalString;
 
+	// Đưa số dương vào result
+	int i = arrBits.size() - 1;
+	while (i >= 0) {
+		bin.insert(0, to_string(arrBits[i]));
+
+		// Nếu đủ 4 bit thì bắt đầu tìm mã hex rồi insert vào result
+		if (bin.length() == 4) {
+			hex = Number::getHexFromBinary(bin);
+			result.insert(0, 1, hex);
+
+			// Làm sạch string bin sẵn sàng cho lần nạp bit tiếp theo
+			bin.clear(); 
+		}
+		i--;
+	}
+
+	// Trường hợp hết arrBits rồi nhưng bin vẫn đang chứa kí tự
+	if (bin.length() != 0) {
+		// insert thêm 0 vào đầu cho đủ 4 bit
+		while (bin.length() < 4) {
+			bin.insert(0, 1, '0');
+		}
+		hex = Number::getHexFromBinary(bin);
+		result.insert(0, 1, hex);
+	}
+
+	// Nếu là số âm thì insert thêm dấu -
+	if (isNegative)
+		result.insert(0, 1, '-');
+
+	return result;
 }
 
