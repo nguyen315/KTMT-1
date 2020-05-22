@@ -140,35 +140,6 @@ string Number::sum(string x, string y)
     return result;
 }
 
-//string Number::subtract(string x, string y)
-//{
-//    int numX = 0, numY = 0, temp = 0, subResult = 0;
-//    string result;
-//    for (int i = x.length() - 1, j = y.length() - 1; j >= 0; i--, j--) {
-//        numX = x[i] - '0';
-//        numY = y[j] - '0' + temp;
-//        if (numX < numY) {
-//            numX += 10;
-//            temp = 1;
-//        }
-//        else temp = 0;
-//        subResult = numX - numY;
-//        result.insert(0, to_string(subResult));
-//    }
-//    for (int i = x.length() - y.length() - 1; i >= 0; i--) {
-//        numX = x[i] - '0';
-//        numY = temp;
-//        if (numX < numY) {
-//            numX += 10;
-//            temp = 1;
-//        }
-//        else temp = 0;
-//        subResult = numX - numY;
-//        result.insert(0, to_string(subResult));
-//    }
-//    while (result[0] == '0') result.erase(0, 1);
-//    return result;
-//}
 
 unordered_map<char, string> Number::initHexMap()
 {

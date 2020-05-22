@@ -18,7 +18,6 @@ public:
 
 	static string getTwoPowerX(int x);
 	static string sum(string x, string y);
-	// static string subtract(string x, string y); // bảo đảm x lúc nào cũng lớn hơn hoặc bằng y
 	
 	static unordered_map<char, string> initHexMap();
 	static char getHexFromBinary(string bin);
