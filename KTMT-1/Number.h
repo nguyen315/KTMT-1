@@ -13,6 +13,7 @@ public:
 	static vector<bool> inputDecimal(string number);
 	static vector<bool> inputHexa(string number);
 	static string div2(string number);
+	static void removeZeroPrefix(vector<bool>&);
 };
 
 #endif // !NUMBER_H

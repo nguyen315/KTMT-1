@@ -1,4 +1,5 @@
 #include "QInt.h"
+#include "Constants.h"
 
 QInt::QInt(int type, string number)
 {
@@ -28,4 +29,73 @@ string QInt::getDecimalType()
 	string decimalString;
 	
 	return decimalString;
+}
+
+void QInt::operator>>(int x)
+{
+	if (x < 0)
+		return;
+
+	if (arrBits.size() >= Constants::maxLength)
+	{
+		if (x >= arrBits.size())
+		{
+			arrBits.clear();
+			arrBits.push_back(0);
+			return;
+		}
+
+		for (int i = arrBits.size() - 1; i >= x; i--)
+			arrBits[i] = arrBits[i - x];
+
+		for (int i = 0; i < x; i++)
+			arrBits[i] = arrBits[0];
+	}
+	else
+	{
+		if (x >= arrBits.size())
+		{
+			arrBits.clear();
+			arrBits.push_back(0);
+			return;
+		}
+
+		for (int i = 0; i < x; i++)
+			arrBits.pop_back();
+	}
+}
+
+void QInt::operator<<(int x)
+{
+	if (x < 0)
+		return;
+
+	if (arrBits.size() >= Constants::maxLength)
+	{
+		for (int i = 0; i < x; i++)
+		{
+			arrBits.push_back(0);
+			arrBits.erase(arrBits.begin());
+		}
+
+		Number::removeZeroPrefix(arrBits);
+		return;
+	}
+
+	if (arrBits.size() + x > Constants::maxLength) {
+		
+		int overValue = arrBits.size() + x - Constants::maxLength;
+
+		for (int i = 0; i < overValue; i++)
+			arrBits.erase(arrBits.begin());
+
+		for (int i = 0; i < x; i++)
+			arrBits.push_back(0);
+
+		Number::removeZeroPrefix(arrBits);
+		return;
+	}
+
+	for (int i = 0; i < x; i++)
+		arrBits.push_back(0);
 }

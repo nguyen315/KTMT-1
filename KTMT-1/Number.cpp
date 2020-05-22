@@ -76,3 +76,11 @@ string Number::div2(string number)
         result.erase(0, 1);
     return result;
 }
+
+void Number::removeZeroPrefix(vector<bool>& arrBits)
+{
+    while (arrBits.size() > 1 && arrBits[0] == 0)
+    {
+        arrBits.erase(arrBits.begin());
+    }
+}
