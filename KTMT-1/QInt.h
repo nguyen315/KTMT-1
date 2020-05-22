@@ -20,8 +20,8 @@ public:
 	string getHexaType();
 	void operator >> (int x);
 	void operator << (int x);
-	void rol(int x);
-	void ror(int x);
+	void rol();
+	void ror();
 	QInt operator & (QInt& other);
 	QInt operator | (QInt& other);
 	QInt operator ^ (QInt& other);

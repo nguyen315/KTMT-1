@@ -99,3 +99,40 @@ void QInt::operator<<(int x)
 	for (int i = 0; i < x; i++)
 		arrBits.push_back(0);
 }
+
+void QInt::rol() {
+
+	if (arrBits.size() < Constants::maxLength) {
+		arrBits.push_back(false);
+	}
+
+	else if (arrBits.size() == Constants::maxLength) {
+		vector<bool>::iterator head;
+		head = arrBits.begin();
+		bool bit_Rol = arrBits.at(0);
+		arrBits.erase(head);
+		arrBits.push_back(bit_Rol);
+	}
+	Number::removeZeroPrefix(arrBits);
+}
+
+
+void QInt::ror() {
+	int n = arrBits.size();
+	if (arrBits.size() < Constants::maxLength) {
+		if (arrBits.back() == true) {
+			for (int i = 0; i <= Constants::maxLength - n; i++) {
+				arrBits.insert(arrBits.begin(), false);
+			}
+			arrBits.insert(arrBits.begin(), false);
+		}
+		arrBits.pop_back();
+	}
+
+	else if (arrBits.size() == Constants::maxLength) {
+		bool bit_Ror = arrBits.at(arrBits.size() - 1);
+		arrBits.insert(arrBits.begin(), bit_Ror);
+		arrBits.pop_back();
+	}
+	Number::removeZeroPrefix(arrBits);
+}
