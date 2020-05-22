@@ -11,18 +11,16 @@ int main() {
 	QInt* a;
 	a = new QInt(2, "11111110");
 	cout << a->getBinaryType() << endl;
-	*a >> 9;
+	//cout << a->getDecimalType() << endl;
+	cout << a->getHexaType() << endl;
+	delete a;
+	a = new QInt(10, "-120");
 	cout << a->getBinaryType() << endl;
-	//cout << a->getDecimalType() << endl;
-	//cout << a->getHexaType() << endl;
-	//delete a;
-	//a = new QInt(10, "-120");
-	//cout << a->getBinaryType() << endl;
-	//cout << a->getHexaType() << endl;
-	///*cout << a->getDecimalType() << endl;*/
-	//delete a;
-	//a = new QInt(16, "7F");
-	//cout << a->getBinaryType() << endl;
-	//cout << a->getDecimalType() << endl;
-	//delete a;
+	cout << a->getHexaType() << endl;
+	/*cout << a->getDecimalType() << endl;*/
+	delete a;
+	a = new QInt(16, "7F");
+	cout << a->getBinaryType() << endl;
+	cout << a->getDecimalType() << endl;
+	delete a;
 }
