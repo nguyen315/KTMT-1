@@ -94,6 +94,8 @@ vector<bool> Number::inputHexa(string number)
         vector <bool> foo(Constants::maxLength - 1, 1); // tạo vector với maxlength - 1 số 1
         arrBits = foo;
     }
+
+
     if (isNegative) {
         if (overflowCase) {
             vector <bool> foo(Constants::maxLength - 1, 0); // tạo vector với maxlength - 1 số 0
