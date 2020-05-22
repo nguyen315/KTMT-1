@@ -1,4 +1,5 @@
 ﻿#include "Number.h"
+#include "Constants.h"
 
 vector<bool> Number::inputBinary(string number)
 {
@@ -15,93 +16,49 @@ vector<bool> Number::inputDecimal(string number)
     vector<bool> arrBits;
     bool overflowCase = false;
     bool bit, isNegative = false;
-
-    // Nếu là số âm thì đổi dấu thành số dương và đánh dấu là âm
     if (number[0] == '-') {
         isNegative = true;
         number.erase(0, 1);
     }
-
-
-    // Xử lý số dương trước, nếu là số âm thì lấy bù 2 lại
-    // Nếu nhập vào số âm <= QInt_MIN thì sẽ đụng vào trường hợp overflow ở dưới
     while (number != "") {
         bit = (number[number.length() - 1] - '0') % 2;
-        arrBits.insert(arrBits.begin(), bit);
-
-
-        // Nếu số dương đụng tới bit cao nhất thì đó là trường hợp overflow
-        if (arrBits.size() == Constants::maxLength) {
+        if (arrBits.size() == Constants::maxLength - 1) {
             vector <bool> foo(Constants::maxLength - 1, 1);
             arrBits = foo;
+            arrBits.insert(arrBits.begin(), 0);
             overflowCase = true;
             break;
         }
-
-        // Dùng hàm div2 để chia 2 số trong string number
+        arrBits.insert(arrBits.begin(), bit);
         number = Number::div2(number);
     }
 
     if (isNegative) {
         if (overflowCase) {
-            vector <bool> foo(Constants::maxLength - 1, 0); // tạo vector với maxlength - 1 số 0
+            vector <bool> foo(Constants::maxLength - 1, 0);
             arrBits = foo;
             arrBits.insert(arrBits.begin(), 1);
         }
-        else
-            // Lấy số bù 2 của số dương -> số âm tương ứng
-            toTwoComplement(arrBits);
+        int pos = -1;
+        for (int i = arrBits.size() - 1; i >= 0; i--) {
+            if (arrBits[i]) {
+                pos = i;
+                break;
+            }
+        }
+        for (int i = pos - 1; i >= 0; i--) {
+            arrBits[i] = !arrBits[i];
+        }
+        while (arrBits.size() < Constants::maxLength) {
+            arrBits.insert(arrBits.begin(), 1);
+        }
     }
-
-
     return arrBits;
 }
 
 vector<bool> Number::inputHexa(string number)
 {
-    bool overflowCase = false;
-    bool isNegative = false;
-
-    // Nếu là số âm thì đổi dấu thành số dương và đánh dấu là âm
-    if (number[0] == '-') {
-        isNegative = true;
-        number.erase(0, 1);
-    }
-
-
     vector<bool> arrBits;
-    string binaryType;
-    for (int i = 0; i < number.length(); i++) {
-        binaryType = hexMap[number[i]];
-        for (int j = 0; j < binaryType.length(); j++) {
-            arrBits.push_back(binaryType[j] - '0');
-        }
-    }
-
-    // Sau khi nhập xong thì xóa hết các số 0 ở đầu
-    while (arrBits.size() && !arrBits[0]) {
-        // Trường hợp number chỉ là số 0 -> arrBits chứa 1 phần tử là số 0
-        if (arrBits.size() == 1 && arrBits[0] == 0)
-            break;
-
-        arrBits.erase(arrBits.begin());
-    }
-
-    // Trường hợp overflow
-    // Nếu số dương đụng tới bit cao nhất thì sẽ overflow
-    if (arrBits.size() >= Constants::maxLength) {
-        overflowCase = true;
-        vector <bool> foo(Constants::maxLength - 1, 1); // tạo vector với maxlength - 1 số 1
-        arrBits = foo;
-    }
-    if (isNegative) {
-        if (overflowCase) {
-            vector <bool> foo(Constants::maxLength - 1, 0); // tạo vector với maxlength - 1 số 0
-            arrBits = foo;
-            arrBits.insert(arrBits.begin(), 1);
-        }
-        else toTwoComplement(arrBits);
-    }
     return arrBits;
 }
 
@@ -115,12 +72,14 @@ string Number::div2(string number)
         temp %= 2;
         result += to_string(quotient);
     }
-    while (result[0] == '0') result.erase(0, 1);
+    while (result[0] == '0')
+        result.erase(0, 1);
     return result;
 }
 
-string Number::mult2(string number)
+void Number::removeZeroPrefix(vector<bool>& arrBits)
 {
+
     string result;
     int temp = 0;
     int multResult;
@@ -234,9 +193,10 @@ void Number::toTwoComplement(vector<bool>& arrBits) {
     
     // trường hợp đổi từ số âm thành số dương thì xóa các số 0 đứng đầu
     while (arrBits.size() && !arrBits[0])
-        arrBits.erase(arrBits.begin());
-}
 
-// Khai báo các biến static để khỏi bị lỗi
-string Number::twoPowerX[128] = { "1" }; // twoPowerX[0] = 1
-unordered_map<char, string> Number::hexMap = Number::initHexMap();
+    while (arrBits.size() > 1 && arrBits[0] == 0)
+    {
+
+        arrBits.erase(arrBits.begin());
+    }
+}
