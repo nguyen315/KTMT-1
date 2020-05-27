@@ -1,5 +1,8 @@
 ﻿#include "QInt.h"
 #include "Constants.h"
+#include <iostream>
+#include "OverflowException.h"
+using namespace std;
 
 QInt::QInt(int type, string number)
 {
@@ -207,3 +210,45 @@ void QInt::ror() {
 	}
 	Number::removeZeroPrefix(arrBits);
 }
+
+QInt& QInt::operator+(QInt& other) 
+{
+	// .....
+	throw 0;
+}
+
+QInt& QInt::operator*(QInt& other) 
+{
+	QInt* temp = new QInt(2, "");
+	QInt* sum = new QInt(2, "");
+
+	for (int i = arrBits.size() - 1; i >= 0; i--)
+	{
+		if (arrBits[i])
+			temp->arrBits = other.arrBits;
+		else continue;
+
+		*temp << arrBits.size() - 1 - i;
+
+		try
+		{
+			*sum = *sum + *temp;
+		}
+		catch (int e)
+		{
+			throw e;
+		}
+	}
+
+	delete temp;
+
+	return *sum;
+}
+
+QInt& QInt::operator=(const QInt& other)
+{
+	// TODO: insert return statement here
+	arrBits = other.arrBits;
+	return *this;
+}
+
