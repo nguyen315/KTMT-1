@@ -26,12 +26,11 @@ public:
 	QInt operator | (QInt& other);
 	QInt operator ^ (QInt& other);
 	QInt operator ~ ();
-	QInt operator + (QInt& other);
+	QInt& operator + (QInt& other);
 	QInt operator - (QInt& other);
 	QInt operator * (QInt& other);
 	QInt operator / (QInt& other);
-	QInt operator = (QInt& other);
-
+	QInt& operator = (const QInt& other);
 };
 
 #endif // !QINT_H

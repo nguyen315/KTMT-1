@@ -1,5 +1,7 @@
 ﻿#include "QInt.h"
 #include "Constants.h"
+#include<iostream>
+using namespace std;
 
 QInt::QInt(int type, string number)
 {
@@ -154,7 +156,7 @@ void QInt::operator<<(int x)
 	}
 
 	if (arrBits.size() + x > Constants::maxLength) {
-		
+
 		int overValue = arrBits.size() + x - Constants::maxLength;
 
 		for (int i = 0; i < overValue; i++)
@@ -188,6 +190,7 @@ void QInt::rol() {
 }
 
 
+
 void QInt::ror() {
 	int n = arrBits.size();
 	if (arrBits.size() < Constants::maxLength) {
@@ -206,4 +209,77 @@ void QInt::ror() {
 		arrBits.pop_back();
 	}
 	Number::removeZeroPrefix(arrBits);
+}
+
+
+
+QInt& QInt::operator + (QInt& other) {
+	int l1 = this->arrBits.size();
+	int l2 = other.arrBits.size();
+	QInt* result = new QInt(2, "");
+	bool storeBit = 0;
+	int longer = 0;
+	if (l1 > l2) {
+		longer = l1;
+		for (int i = l2; i <= l1; i++) {
+			other.arrBits.insert(other.arrBits.begin(), false);
+		}
+		arrBits.insert(arrBits.begin(), false);
+	}
+	else if(l2 > l1) {
+		longer = l2;
+		for (int i = l1; i <= l2; i++) {
+			arrBits.insert(arrBits.begin(), false);
+		}
+		other.arrBits.insert(other.arrBits.begin(), false);
+	}
+	else {
+		longer = l1;
+		arrBits.insert(arrBits.begin(), false);
+		other.arrBits.insert(other.arrBits.begin(), false);
+	}
+
+	result->arrBits.resize(longer + 1);
+	for (int i = l1; i >= 0; i--) {
+		if (arrBits[i] == 0 && other.arrBits[i] == 0) {
+			if (storeBit == 0) {
+				result->arrBits[i] = 0;
+			}
+			else {
+				result->arrBits[i] = 1;
+				storeBit = 0;
+			}
+		}
+		else if (arrBits[i] == 1 && other.arrBits[i] == 1) {
+			if (storeBit == 1) {
+				result->arrBits[i] = 1;
+			}
+			else {
+				result->arrBits[i] = 0;
+			}
+			storeBit = 1;
+		}
+		else {
+			if (storeBit == 1) {
+				result->arrBits[i] = 0;
+				storeBit = 1;
+			}
+			else {
+				result->arrBits[i] = 0;
+			}
+		}
+		if (i == 0) {
+			result->arrBits[i] = result->arrBits[i] + storeBit;
+		}
+	}
+	Number::removeZeroPrefix(result->arrBits);
+	return *result;
+}
+
+
+QInt& QInt::operator=(const QInt& other)
+{
+	arrBits.resize(other.arrBits.size());
+	arrBits = other.arrBits;
+	return *this;
 }

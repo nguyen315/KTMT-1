@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="QInt.h" />
   </ItemGroup>
