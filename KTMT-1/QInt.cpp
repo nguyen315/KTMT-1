@@ -19,7 +19,7 @@ QInt::QInt(int type, string number)
 
 string QInt::getBinaryType()
 {
-	string binaryString;
+	string binaryString = "";
 	for (int i = 0; i < arrBits.size(); i++) {
 		if (arrBits[i]) binaryString.push_back('1');
 		else binaryString.push_back('0');
@@ -211,6 +211,91 @@ void QInt::ror() {
 	Number::removeZeroPrefix(arrBits);
 }
 
+
+QInt& QInt::operator&(QInt& other)
+{
+	string _arrBits = "";
+
+	// AND từng bit cho đến khi một trong 2 hết bit thì dừng lại, vì lúc đó bit nào còn lại & với 0 cũng bằng 0
+	for (int i = this->arrBits.size() - 1, j = other.arrBits.size() - 1; i >= 0 && j >= 0; i--, j--) {
+		_arrBits.insert(0, to_string((this->arrBits[i] & other.arrBits[j])));
+	}
+
+
+	QInt *result = new QInt(2, _arrBits);
+
+
+	// Trong hàm tạo đã xử lý các số 0 ở đầu
+	return *result;
+}
+
+QInt& QInt::operator|(QInt& other)
+{
+	string _arrBits = "";
+
+	for (int i = this->arrBits.size() - 1, j = other.arrBits.size() - 1; i >= 0 && j >= 0; i--, j--) {
+		_arrBits.insert(0, to_string((this->arrBits[i] | other.arrBits[j])));
+	}
+
+	// Tới đây có 2 TH, this->arrBits dài hơn hoặc other.arrBits dài hơn
+	if (this->arrBits.size() > other.arrBits.size()) {
+		for (int i = this->arrBits.size() - other.arrBits.size() - 1; i >= 0; i--) {
+			_arrBits.insert(0, to_string(this->arrBits[i]));
+		}
+	}
+	else {
+		for (int i = other.arrBits.size() - this->arrBits.size() - 1; i >= 0; i--) {
+			_arrBits.insert(0, to_string(other.arrBits[i]));
+		}
+	}
+
+	QInt* result = new QInt(2, _arrBits);
+
+	// Trong hàm tạo đã xử lý các số 0 ở đầu
+	return *result;
+}
+
+QInt& QInt::operator^(QInt& other)
+{
+	string _arrBits = "";
+
+	for (int i = this->arrBits.size() - 1, j = other.arrBits.size() - 1; i >= 0 && j >= 0; i--, j--) {
+		_arrBits.insert(0, to_string((this->arrBits[i] ^ other.arrBits[j])));
+	}
+
+	// Tới đây có 2 TH, this->arrBits dài hơn hoặc other.arrBits dài hơn
+	if (this->arrBits.size() > other.arrBits.size()) {
+		for (int i = this->arrBits.size() - other.arrBits.size() - 1; i >= 0; i--) {
+			_arrBits.insert(0, to_string(this->arrBits[i] ^ 0));
+		}
+	}
+	else {
+		for (int i = other.arrBits.size() - this->arrBits.size() - 1; i >= 0; i--) {
+			_arrBits.insert(0, to_string(other.arrBits[i] ^ 0));
+		}
+	}
+
+	QInt* result = new QInt(2, _arrBits);
+
+	// Trong hàm tạo đã xử lý các số 0 ở đầu
+	return *result;
+}
+
+QInt& QInt::operator~()
+{
+	for (int i = 0; i < this->arrBits.size(); i++) {
+		this->arrBits[i] = !this->arrBits[i];
+	}
+
+	// Xử lý số 0 ở đầu
+	Number::removeZeroPrefix(this->arrBits);
+	return *this;
+}
+
+QInt& QInt::operator=(QInt& other)
+{
+	this->arrBits = other.arrBits;
+=======
 QInt& QInt::operator+(QInt& other) 
 {
 	// .....
@@ -249,6 +334,7 @@ QInt& QInt::operator=(const QInt& other)
 {
 	// TODO: insert return statement here
 	arrBits = other.arrBits;
+
 	return *this;
 }
 

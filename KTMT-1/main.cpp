@@ -24,6 +24,34 @@ int main() {
 	//cout << a->getDecimalType() << endl;
 	//delete a;
 
+
+
+	/*int x = 8;
+	int y = 9;
+
+	cout << (x | y) << endl;*/
+
+	QInt* a, * b;
+	a = new QInt(2, "10110001");
+	b = new QInt(2, "11001");
+	QInt* c;
+
+	c = &(*a & *b);
+	cout << "&: " << c->getBinaryType() << endl;
+	delete c;
+
+	c = &(*a | *b);
+	cout << "|: " << c->getBinaryType() << endl;
+	delete c;
+
+	c = &(*a ^ *b);
+	cout << "^: " << c->getBinaryType() << endl;
+	delete c;
+
+	c = &(~*a);
+	cout << "~: " << c->getBinaryType() << endl;
+	delete c;
+
 	QInt* a = new QInt(2, "111");
 	QInt* b = new QInt(2, "010");
 	QInt* c = new QInt(2, "");
@@ -37,4 +65,5 @@ int main() {
 		cerr << "0" << endl;
 	}
 	cout << a->getBinaryType() << endl;
+
 }

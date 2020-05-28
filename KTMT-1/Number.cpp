@@ -8,6 +8,9 @@ vector<bool> Number::inputBinary(string number)
         if (arrBits.size() == Constants::maxLength) break;
         arrBits.push_back(number[i] - '0');
     }
+
+
+    Number::removeZeroPrefix(arrBits);
     return arrBits;
 }
 
@@ -54,7 +57,7 @@ vector<bool> Number::inputDecimal(string number)
             toTwoComplement(arrBits);
     }
 
-
+    Number::removeZeroPrefix(arrBits);
     return arrBits;
 }
 
@@ -79,14 +82,8 @@ vector<bool> Number::inputHexa(string number)
         }
     }
 
-    // Sau khi nhập xong thì xóa hết các số 0 ở đầu
-    while (arrBits.size() && !arrBits[0]) {
-        // Trường hợp number chỉ là số 0 -> arrBits chứa 1 phần tử là số 0
-        if (arrBits.size() == 1 && arrBits[0] == 0)
-            break;
-
-        arrBits.erase(arrBits.begin());
-    }
+    // Xử lý các số 0 ở đầu
+    Number::removeZeroPrefix(arrBits);
 
     // Trường hợp overflow
     // Nếu số dương đụng tới bit cao nhất thì sẽ overflow
@@ -103,6 +100,8 @@ vector<bool> Number::inputHexa(string number)
         }
         else toTwoComplement(arrBits);
     }
+
+
     return arrBits;
 }
 
@@ -234,9 +233,9 @@ void Number::toTwoComplement(vector<bool>& arrBits) {
         arrBits.insert(arrBits.begin(), 1);
     }
 
-    // trường hợp đổi từ số âm thành số dương thì xóa các số 0 đứng đầu
-    while (arrBits.size() && !arrBits[0])
-        arrBits.erase(arrBits.begin());
+
+    // Xử lý các số 0 ở đầu
+    Number::removeZeroPrefix(arrBits);
 }
 
 void Number::removeZeroPrefix(vector<bool>& arrBits)
