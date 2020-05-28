@@ -1,7 +1,7 @@
 ﻿#include "Constants.h"
 #include "QInt.h"
 #include <iostream>
-#include <bitset>
+#include "OverflowException.h"
 
 using namespace std;
 
@@ -23,6 +23,7 @@ int main() {
 	//cout << a->getBinaryType() << endl;
 	//cout << a->getDecimalType() << endl;
 	//delete a;
+
 
 
 	/*int x = 8;
@@ -50,4 +51,19 @@ int main() {
 	c = &(~*a);
 	cout << "~: " << c->getBinaryType() << endl;
 	delete c;
+
+	QInt* a = new QInt(2, "111");
+	QInt* b = new QInt(2, "010");
+	QInt* c = new QInt(2, "");
+
+	try
+	{
+		*c = *a * *b;
+	}
+	catch (int e)
+	{
+		cerr << "0" << endl;
+	}
+	cout << a->getBinaryType() << endl;
+
 }
