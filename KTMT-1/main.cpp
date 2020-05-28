@@ -23,9 +23,8 @@ int main() {
 	//cout << a->getBinaryType() << endl;
 	//cout << a->getDecimalType() << endl;
 	//delete a;
-	QInt aa(2, "10111");
+	QInt a(2, "11011");
 	QInt b(2, "111");
-	QInt c(2, "1011");
-	aa = b + c;
-	cout << aa.getBinaryType() << endl;
+	QInt c = a - b;
+	cout << c.getBinaryType() << endl;
 }

@@ -2,6 +2,7 @@
 #include "Constants.h"
 #include<iostream>
 using namespace std;
+int flagMinus = 0;
 
 QInt::QInt(int type, string number)
 {
@@ -222,11 +223,13 @@ QInt& QInt::operator + (QInt& other) {
 	if (l1 > l2) {
 		longer = l1;
 		for (int i = l2; i <= l1; i++) {
-			other.arrBits.insert(other.arrBits.begin(), false);
+			if(flagMinus == 0) other.arrBits.insert(other.arrBits.begin(), false);
+			else other.arrBits.insert(other.arrBits.begin(), true);
 		}
-		arrBits.insert(arrBits.begin(), false);
+		if (flagMinus == 0) arrBits.insert(arrBits.begin(), false);
+		else arrBits.insert(arrBits.begin(), true);
 	}
-	else if(l2 > l1) {
+	else if(l1 < l2) {
 		longer = l2;
 		for (int i = l1; i <= l2; i++) {
 			arrBits.insert(arrBits.begin(), false);
@@ -235,12 +238,20 @@ QInt& QInt::operator + (QInt& other) {
 	}
 	else {
 		longer = l1;
-		arrBits.insert(arrBits.begin(), false);
-		other.arrBits.insert(other.arrBits.begin(), false);
+		if (flagMinus == 0) {
+			arrBits.insert(arrBits.begin(), false);
+			other.arrBits.insert(other.arrBits.begin(), false);
+		}
+		else {
+			arrBits.insert(arrBits.begin(), true);
+			other.arrBits.insert(other.arrBits.begin(), true);
+		}
 	}
-
+	cout << this->getBinaryType() << endl;
+	cout << other.getBinaryType() << endl;
 	result->arrBits.resize(longer + 1);
-	for (int i = l1; i >= 0; i--) {
+	for (int i = longer; i >= 0; i--) {
+		// both 0
 		if (arrBits[i] == 0 && other.arrBits[i] == 0) {
 			if (storeBit == 0) {
 				result->arrBits[i] = 0;
@@ -250,6 +261,7 @@ QInt& QInt::operator + (QInt& other) {
 				storeBit = 0;
 			}
 		}
+		// both 1
 		else if (arrBits[i] == 1 && other.arrBits[i] == 1) {
 			if (storeBit == 1) {
 				result->arrBits[i] = 1;
@@ -259,27 +271,48 @@ QInt& QInt::operator + (QInt& other) {
 			}
 			storeBit = 1;
 		}
+		// diffirent
 		else {
 			if (storeBit == 1) {
 				result->arrBits[i] = 0;
 				storeBit = 1;
 			}
 			else {
-				result->arrBits[i] = 0;
+				result->arrBits[i] = 1;
 			}
 		}
 		if (i == 0) {
-			result->arrBits[i] = result->arrBits[i] + storeBit;
+			if (longer == 128 && storeBit == 1) {
+				throw 0;
+			}
+			result->arrBits[0] = result->arrBits[0] + storeBit;
 		}
 	}
+	if(flagMinus == 1 && result->arrBits[0] == 1) result->arrBits[0] = 0;
 	Number::removeZeroPrefix(result->arrBits);
+	flagMinus = 0;
 	return *result;
+}
+
+
+QInt& QInt::operator - (QInt& other) {
+	QInt* reverse = new QInt(2, "");
+	reverse->arrBits = other.arrBits;
+	for (int i = reverse->arrBits.size() - 1; i >= 0; i--) {
+		if (reverse->arrBits[i] == 1) {
+			for (int j = 0; j < i; j++) {
+				reverse->arrBits[j] = !reverse->arrBits[j];
+			}
+			break;
+		}
+	}
+	flagMinus = 1;
+	return *this + *reverse;
 }
 
 
 QInt& QInt::operator=(const QInt& other)
 {
-	arrBits.resize(other.arrBits.size());
 	arrBits = other.arrBits;
 	return *this;
 }

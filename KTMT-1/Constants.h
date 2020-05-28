@@ -6,7 +6,7 @@
 using namespace std;
 
 namespace Constants {
-	const int maxLength = 8;
+	const int maxLength = 128;
 	const string inputFile = "input.txt";
 	const string outputFile = "output.txt";
 }
