@@ -23,14 +23,23 @@ public:
 	void rol();
 	void ror();
 
+	QInt operator & (QInt& other);
+	QInt operator | (QInt& other);
+	QInt operator ^ (QInt& other);
+	QInt operator ~ ();
+	
+	QInt operator * (QInt& other);
+	QInt operator / (QInt& other);
+	QInt& operator = (const QInt& other);
+
+
 	QInt& operator & (QInt& other);
 	QInt& operator | (QInt& other);
 	QInt& operator ^ (QInt& other);
 	QInt& operator ~ ();
 
-	QInt& operator + (QInt& other);
-
-	QInt operator - (QInt& other);
+  QInt& operator + (QInt& other);
+	QInt& operator - (QInt& other);
 	QInt& operator * (QInt& other);
 	QInt operator / (QInt& other);
 

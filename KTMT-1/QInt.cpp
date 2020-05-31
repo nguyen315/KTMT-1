@@ -1,8 +1,11 @@
 ﻿#include "QInt.h"
 #include "Constants.h"
-#include <iostream>
+#include<iostream>
+
 #include "OverflowException.h"
 using namespace std;
+
+int flagMinus = 0;
 
 QInt::QInt(int type, string number)
 {
@@ -157,7 +160,7 @@ void QInt::operator<<(int x)
 	}
 
 	if (arrBits.size() + x > Constants::maxLength) {
-		
+
 		int overValue = arrBits.size() + x - Constants::maxLength;
 
 		for (int i = 0; i < overValue; i++)
@@ -191,6 +194,7 @@ void QInt::rol() {
 }
 
 
+
 void QInt::ror() {
 	int n = arrBits.size();
 	if (arrBits.size() < Constants::maxLength) {
@@ -211,6 +215,110 @@ void QInt::ror() {
 	Number::removeZeroPrefix(arrBits);
 }
 
+
+
+QInt& QInt::operator + (QInt& other) {
+	int l1 = this->arrBits.size();
+	int l2 = other.arrBits.size();
+	QInt* result = new QInt(2, "");
+	bool storeBit = 0;
+	int longer = 0;
+	if (l1 > l2) {
+		longer = l1;
+		for (int i = l2; i <= l1; i++) {
+			if(flagMinus == 0) other.arrBits.insert(other.arrBits.begin(), false);
+			else other.arrBits.insert(other.arrBits.begin(), true);
+		}
+		if (flagMinus == 0) arrBits.insert(arrBits.begin(), false);
+		else arrBits.insert(arrBits.begin(), true);
+	}
+	else if(l1 < l2) {
+		longer = l2;
+		for (int i = l1; i <= l2; i++) {
+			arrBits.insert(arrBits.begin(), false);
+		}
+		other.arrBits.insert(other.arrBits.begin(), false);
+	}
+	else {
+		longer = l1;
+		if (flagMinus == 0) {
+			arrBits.insert(arrBits.begin(), false);
+			other.arrBits.insert(other.arrBits.begin(), false);
+		}
+		else {
+			arrBits.insert(arrBits.begin(), true);
+			other.arrBits.insert(other.arrBits.begin(), true);
+		}
+	}
+	cout << this->getBinaryType() << endl;
+	cout << other.getBinaryType() << endl;
+	result->arrBits.resize(longer + 1);
+	for (int i = longer; i >= 0; i--) {
+		// both 0
+		if (arrBits[i] == 0 && other.arrBits[i] == 0) {
+			if (storeBit == 0) {
+				result->arrBits[i] = 0;
+			}
+			else {
+				result->arrBits[i] = 1;
+				storeBit = 0;
+			}
+		}
+		// both 1
+		else if (arrBits[i] == 1 && other.arrBits[i] == 1) {
+			if (storeBit == 1) {
+				result->arrBits[i] = 1;
+			}
+			else {
+				result->arrBits[i] = 0;
+			}
+			storeBit = 1;
+		}
+		// diffirent
+		else {
+			if (storeBit == 1) {
+				result->arrBits[i] = 0;
+				storeBit = 1;
+			}
+			else {
+				result->arrBits[i] = 1;
+			}
+		}
+		if (i == 0) {
+			if (longer == 128 && storeBit == 1) {
+				throw 0;
+			}
+			result->arrBits[0] = result->arrBits[0] + storeBit;
+		}
+	}
+	if(flagMinus == 1 && result->arrBits[0] == 1) result->arrBits[0] = 0;
+	Number::removeZeroPrefix(result->arrBits);
+	flagMinus = 0;
+	return *result;
+}
+
+
+QInt& QInt::operator - (QInt& other) {
+	QInt* reverse = new QInt(2, "");
+	reverse->arrBits = other.arrBits;
+	for (int i = reverse->arrBits.size() - 1; i >= 0; i--) {
+		if (reverse->arrBits[i] == 1) {
+			for (int j = 0; j < i; j++) {
+				reverse->arrBits[j] = !reverse->arrBits[j];
+			}
+			break;
+		}
+	}
+	flagMinus = 1;
+	return *this + *reverse;
+}
+
+
+QInt& QInt::operator=(const QInt& other)
+{
+	arrBits = other.arrBits;
+	return *this;
+}
 
 QInt& QInt::operator&(QInt& other)
 {
@@ -292,16 +400,6 @@ QInt& QInt::operator~()
 	return *this;
 }
 
-QInt& QInt::operator=(QInt& other)
-{
-	this->arrBits = other.arrBits;
-=======
-QInt& QInt::operator+(QInt& other) 
-{
-	// .....
-	throw 0;
-}
-
 QInt& QInt::operator*(QInt& other) 
 {
 	QInt* temp = new QInt(2, "");
@@ -328,13 +426,5 @@ QInt& QInt::operator*(QInt& other)
 	delete temp;
 
 	return *sum;
-}
-
-QInt& QInt::operator=(const QInt& other)
-{
-	// TODO: insert return statement here
-	arrBits = other.arrBits;
-
-	return *this;
 }
 
