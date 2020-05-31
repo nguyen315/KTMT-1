@@ -24,7 +24,8 @@
     <ClInclude Include="QInt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
+
+    <ClInclude Include="OverflowException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
