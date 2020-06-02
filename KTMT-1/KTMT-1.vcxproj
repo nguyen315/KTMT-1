@@ -139,12 +139,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="main.h" />
+    <ClInclude Include="IOFile.h" />
     <ClInclude Include="Number.h" />
-    <ClInclude Include="OverflowException.h" />
     <ClInclude Include="QInt.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IOFile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="QInt.cpp" />

@@ -23,10 +23,16 @@ QInt::QInt(int type, string number)
 string QInt::getBinaryType()
 {
 	string binaryString = "";
+
 	for (int i = 0; i < arrBits.size(); i++) {
-		if (arrBits[i]) binaryString.push_back('1');
-		else binaryString.push_back('0');
+
+		if (arrBits[i])
+			binaryString.push_back('1');
+
+		else 
+			binaryString.push_back('0');
 	}
+
 	return binaryString;
 }
 
@@ -216,21 +222,24 @@ void QInt::ror() {
 }
 
 
-
-QInt& QInt::operator + (QInt& other) {
+QInt QInt::operator + (QInt& other) {
 	int l1 = this->arrBits.size();
 	int l2 = other.arrBits.size();
-	QInt* result = new QInt(2, "");
+	QInt result(2, "");
 	bool storeBit = 0;
 	int longer = 0;
 	if (l1 > l2) {
 		longer = l1;
 		for (int i = l2; i <= l1; i++) {
-			if(flagMinus == 0) other.arrBits.insert(other.arrBits.begin(), false);
-			else other.arrBits.insert(other.arrBits.begin(), true);
+			if(flagMinus == 0) 
+				other.arrBits.insert(other.arrBits.begin(), false);
+			else 
+				other.arrBits.insert(other.arrBits.begin(), true);
 		}
-		if (flagMinus == 0) arrBits.insert(arrBits.begin(), false);
-		else arrBits.insert(arrBits.begin(), true);
+		if (flagMinus == 0) 
+			arrBits.insert(arrBits.begin(), false);
+		else 
+			arrBits.insert(arrBits.begin(), true);
 	}
 	else if(l1 < l2) {
 		longer = l2;
@@ -252,65 +261,60 @@ QInt& QInt::operator + (QInt& other) {
 	}
 	cout << this->getBinaryType() << endl;
 	cout << other.getBinaryType() << endl;
-	result->arrBits.resize(longer + 1);
+	result.arrBits.resize(longer + 1);
 	for (int i = longer; i >= 0; i--) {
 		// both 0
 		if (arrBits[i] == 0 && other.arrBits[i] == 0) {
 			if (storeBit == 0) {
-				result->arrBits[i] = 0;
+				result.arrBits[i] = 0;
 			}
 			else {
-				result->arrBits[i] = 1;
+				result.arrBits[i] = 1;
 				storeBit = 0;
 			}
 		}
 		// both 1
 		else if (arrBits[i] == 1 && other.arrBits[i] == 1) {
 			if (storeBit == 1) {
-				result->arrBits[i] = 1;
+				result.arrBits[i] = 1;
 			}
 			else {
-				result->arrBits[i] = 0;
+				result.arrBits[i] = 0;
 			}
 			storeBit = 1;
 		}
 		// diffirent
 		else {
 			if (storeBit == 1) {
-				result->arrBits[i] = 0;
+				result.arrBits[i] = 0;
 				storeBit = 1;
 			}
 			else {
-				result->arrBits[i] = 1;
+				result.arrBits[i] = 1;
 			}
 		}
 		if (i == 0) {
 			if (longer == 128 && storeBit == 1) {
 				throw 0;
 			}
-			result->arrBits[0] = result->arrBits[0] + storeBit;
+			result.arrBits[0] = result.arrBits[0] + storeBit;
 		}
 	}
-	if(flagMinus == 1 && result->arrBits[0] == 1) result->arrBits[0] = 0;
-	Number::removeZeroPrefix(result->arrBits);
+	if(flagMinus == 1 && result.arrBits[0] == 1) result.arrBits[0] = 0;
+	Number::removeZeroPrefix(result.arrBits);
 	flagMinus = 0;
-	return *result;
+	return result;
 }
 
 
-QInt& QInt::operator - (QInt& other) {
-	QInt* reverse = new QInt(2, "");
-	reverse->arrBits = other.arrBits;
-	for (int i = reverse->arrBits.size() - 1; i >= 0; i--) {
-		if (reverse->arrBits[i] == 1) {
-			for (int j = 0; j < i; j++) {
-				reverse->arrBits[j] = !reverse->arrBits[j];
-			}
-			break;
-		}
-	}
+QInt QInt::operator - (QInt& other) {
+	QInt reverse(2, "");
+	reverse = other;
+
+	Number::toTwoComplement(reverse.arrBits);
+
 	flagMinus = 1;
-	return *this + *reverse;
+	return *this + reverse;
 }
 
 
@@ -320,7 +324,7 @@ QInt& QInt::operator=(const QInt& other)
 	return *this;
 }
 
-QInt& QInt::operator&(QInt& other)
+QInt QInt::operator&(QInt& other)
 {
 	string _arrBits = "";
 
@@ -330,14 +334,14 @@ QInt& QInt::operator&(QInt& other)
 	}
 
 
-	QInt *result = new QInt(2, _arrBits);
+	QInt result(2, _arrBits);
 
 
 	// Trong hàm tạo đã xử lý các số 0 ở đầu
-	return *result;
+	return result;
 }
 
-QInt& QInt::operator|(QInt& other)
+QInt QInt::operator|(QInt& other)
 {
 	string _arrBits = "";
 
@@ -357,13 +361,13 @@ QInt& QInt::operator|(QInt& other)
 		}
 	}
 
-	QInt* result = new QInt(2, _arrBits);
+	QInt result(2, _arrBits);
 
 	// Trong hàm tạo đã xử lý các số 0 ở đầu
-	return *result;
+	return result;
 }
 
-QInt& QInt::operator^(QInt& other)
+QInt QInt::operator^(QInt& other)
 {
 	string _arrBits = "";
 
@@ -383,14 +387,17 @@ QInt& QInt::operator^(QInt& other)
 		}
 	}
 
-	QInt* result = new QInt(2, _arrBits);
+	QInt result(2, _arrBits);
 
 	// Trong hàm tạo đã xử lý các số 0 ở đầu
-	return *result;
+	return result;
 }
 
 QInt& QInt::operator~()
 {
+	while (arrBits.size() < Constants::maxLength) {
+		arrBits.insert(arrBits.begin(), 0);
+	}
 	for (int i = 0; i < this->arrBits.size(); i++) {
 		this->arrBits[i] = !this->arrBits[i];
 	}
@@ -400,22 +407,32 @@ QInt& QInt::operator~()
 	return *this;
 }
 
-QInt& QInt::operator*(QInt& other) 
+QInt QInt::operator*(QInt& other)
 {
-	QInt* temp = new QInt(2, "");
-	QInt* sum = new QInt(2, "");
+	vector<bool> firstArr = arrBits;
+	vector<bool> secondArr = other.arrBits;
 
-	for (int i = arrBits.size() - 1; i >= 0; i--)
+	if (Number::getSignOfNumber(arrBits) == 1)
+		Number::toTwoComplement(firstArr);
+
+	if (Number::getSignOfNumber(secondArr) == 1)
+		Number::toTwoComplement(secondArr);
+
+
+	QInt temp(2, "");
+	QInt sum(2, "");
+
+	for (int i = firstArr.size() - 1; i >= 0; i--)
 	{
-		if (arrBits[i])
-			temp->arrBits = other.arrBits;
+		if (firstArr[i])
+			temp.arrBits = secondArr;
 		else continue;
 
-		*temp << arrBits.size() - 1 - i;
+		temp << firstArr.size() - 1 - i;
 
 		try
 		{
-			*sum = *sum + *temp;
+			sum = sum + temp;
 		}
 		catch (int e)
 		{
@@ -423,8 +440,74 @@ QInt& QInt::operator*(QInt& other)
 		}
 	}
 
-	delete temp;
+	if (Number::getSignOfNumber(arrBits) ^ Number::getSignOfNumber(other.arrBits))
+	{
+		Number::toTwoComplement(sum.arrBits);
+	}
 
-	return *sum;
+	Number::removeZeroPrefix(sum.arrBits);
+
+	return sum;
 }
 
+QInt QInt::operator/(QInt& other)
+{
+	QInt Quotient(2, "");
+	QInt Remainder(2, "");
+
+	if (Number::getSignOfNumber(arrBits) == 1)
+		Number::toTwoComplement(arrBits);
+
+	if (Number::getSignOfNumber(other.arrBits) == 1)
+		Number::toTwoComplement(other.arrBits);
+
+	for (int i = 0; i < arrBits.size(); i++)
+	{
+		Remainder.arrBits.push_back(arrBits[i]);
+
+		if (Remainder < other)
+		{
+			Quotient.arrBits.push_back(0);
+		}
+		else
+		{
+			Quotient.arrBits.push_back(1);
+			Remainder = Remainder - other;
+		}
+	}
+
+	if (Number::getSignOfNumber(arrBits) ^ Number::getSignOfNumber(other.arrBits))
+	{
+		Number::toTwoComplement(Quotient.arrBits);
+	}
+
+	Number::removeZeroPrefix(Quotient.arrBits);
+
+	return Quotient;
+
+
+}
+
+bool QInt::operator>(QInt& other)
+{
+	if (arrBits.size() > other.arrBits.size())
+		return true;
+	else if (arrBits.size() == other.arrBits.size())
+	{
+		return getBinaryType().compare(other.getBinaryType()) > 0;
+	}
+
+	return false;
+}
+
+bool QInt::operator<(QInt& other)
+{
+	if (arrBits.size() < other.arrBits.size())
+		return true;
+	else if (arrBits.size() == other.arrBits.size())
+	{
+		return getBinaryType().compare(other.getBinaryType()) < 0;
+	}
+
+	return false;
+}

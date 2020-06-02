@@ -246,6 +246,14 @@ void Number::removeZeroPrefix(vector<bool>& arrBits)
     }
 }
 
+bool Number::getSignOfNumber(vector<bool>& arrBits)
+{
+    if (arrBits.size() == Constants::maxLength && arrBits[0]) {
+        return 1;
+    }
+    return 0;
+}
+
 
 // Khai báo các biến static để khỏi bị lỗi
 string Number::twoPowerX[128] = { "1" }; // twoPowerX[0] = 1

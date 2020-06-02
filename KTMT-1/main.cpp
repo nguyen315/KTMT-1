@@ -1,7 +1,7 @@
 ﻿#include "Constants.h"
 #include "QInt.h"
+#include "IOFile.h"
 #include <iostream>
-#include "OverflowException.h"
 
 using namespace std;
 
@@ -26,52 +26,187 @@ int main() {
 	//cout << a->getDecimalType() << endl;
 	//delete a;
 
-	QInt a(2, "11011");
-	QInt b(2, "111");
-	QInt c = a - b;
-	cout << c.getBinaryType() << endl;
+	//QInt a(2, "11011");
+	//QInt b(2, "111");
+	//QInt c = a - b;
+	//cout << c.getBinaryType() << endl;
 
-
-
-
-	/*int x = 8;
-	int y = 9;
-
-	cout << (x | y) << endl;*/
-
+	// a, b để đọc dữ liệu, c để chứa kết quả
 	QInt* a, * b;
-	a = new QInt(2, "10110001");
-	b = new QInt(2, "11001");
-	QInt* c;
+	QInt c(2, "");
 
-	c = &(*a & *b);
-	cout << "&: " << c->getBinaryType() << endl;
-	delete c;
 
-	c = &(*a | *b);
-	cout << "|: " << c->getBinaryType() << endl;
-	delete c;
 
-	c = &(*a ^ *b);
-	cout << "^: " << c->getBinaryType() << endl;
-	delete c;
+	// dùng để test
+	/*a = new QInt(2, "100");
+	b = new QInt(2, "11111110");
 
-	c = &(~*a);
-	cout << "~: " << c->getBinaryType() << endl;
-	delete c;
+	~*b;
+	cout << b->getBinaryType() << endl;*/
 
-	QInt* a = new QInt(2, "111");
-	QInt* b = new QInt(2, "010");
-	QInt* c = new QInt(2, "");
 
-	try
-	{
-		*c = *a * *b;
+
+
+	// vector input chứa các dòng được đọc từ file input.txt
+	// File input.txt có thể được sửa trong Constants.h
+	vector<string> input = IOFile::readFile(Constants::inputFile);
+
+	// Duyệt qua từng dòng ở vector input để thực hiện từng yêu cầu, kết quả result sẽ được ghi vào vector output
+	vector<string> output;
+	string result;
+
+	for (int i = 0; i < input.size(); i++) {
+
+		// Tách từng từ trong từng dòng ra
+		vector<string> splittedString;
+		splittedString = IOFile::splitString(input[i]);
+
+
+		int typeOfInput, typeOfOutput;
+		string typeOfOperator;
+		int numberOfShift = 0;
+
+		if (splittedString.size() == 4) {
+		
+			// Chuyển từ string sang int
+			typeOfInput = typeOfOutput = atoi(splittedString[0].c_str());
+
+			typeOfOperator = splittedString[2];
+
+			if (typeOfOperator == "&" || typeOfOperator == "|" || typeOfOperator == "^" || typeOfOperator == "+" || typeOfOperator == "-"|| 
+				typeOfOperator == "*" || typeOfOperator == "/") {
+
+				a = new QInt(typeOfInput, splittedString[1]);
+				b = new QInt(typeOfInput, splittedString[3]);
+
+				if (typeOfOperator == "&") {
+					c = (*a & *b);
+				}
+				else if (typeOfOperator == "|") {
+					c = (*a | *b);
+				}
+				else if (typeOfOperator == "^") {
+					c = (*a ^ *b);
+				}
+				else if (typeOfOperator == "+") {
+					try {
+						c = (*a + *b);
+					}
+					catch (int e) {
+						QInt d(2, "0");
+						c = d;
+					}
+				}
+				else if (typeOfOperator == "-") {
+					try {
+						c = (*a - *b);
+					}
+					catch (int e) {
+						QInt d(2, "0");
+						c = d;
+					}
+				}
+				else if (typeOfOperator == "*") {
+					try {
+						c = (*a * *b);
+					}
+					catch (int e) {
+						QInt d(2, "0");
+						c = d;
+					}
+				}
+				else if (typeOfOperator == "/") {
+					try {
+						c = (*a / *b);
+					}
+					catch (int e) {
+						QInt d(2, "0");
+						c = d;
+					}
+				}
+
+				// Ghi kết quả vào vector ouput
+				result = IOFile::writeOutput(typeOfOutput, c);
+
+				// Xóa 2 biến a và b
+				delete a;
+				delete b;
+			}
+
+			else { // Trường hợp >> << thì đọc khác
+				a = new QInt(typeOfInput, splittedString[1]);
+				numberOfShift = atoi(splittedString[3].c_str());
+				typeOfOperator = splittedString[2];
+				
+				if (typeOfOperator == ">>") {
+					*a >> numberOfShift;
+				}
+				else if (typeOfOperator == "<<") {
+					*a << numberOfShift;
+				}
+
+				// Ghi kết quả vào vector ouput
+				result = IOFile::writeOutput(typeOfOutput, *a);
+
+				// Xóa con trỏ a
+				delete a;
+			}
+		}
+
+
+		// Các phép toán ror, rol, ~, và chuyển hệ số
+		else if (splittedString.size() == 3) { 
+			typeOfOperator = splittedString[1];
+			if (typeOfOperator == "ror" || typeOfOperator == "rol" || typeOfOperator == "~") {
+				// Chuyển từ string sang int
+				typeOfInput = typeOfOutput = atoi(splittedString[0].c_str());
+
+				// Đọc số vào 
+				a = new QInt(typeOfInput, splittedString[2]);
+
+				// Xử lý theo yêu cầu
+				if (typeOfOperator == "ror") {
+					a->ror();
+				}
+				else if (typeOfOperator == "rol") {
+					a->rol();
+				}
+				else if (typeOfOperator == "~") {
+					~*a;
+				}
+
+				// Ghi kết quả vào vector ouput
+				result = IOFile::writeOutput(typeOfOutput, *a);
+
+				// Xóa con trỏ a
+				delete a;
+			}
+
+			else {
+				typeOfInput = atoi(splittedString[0].c_str());
+				typeOfOutput = atoi(splittedString[1].c_str());
+
+				a = new QInt(typeOfInput, splittedString[2]);
+
+				// Ghi kết quả vào vector ouput
+				result = IOFile::writeOutput(typeOfOutput, *a);
+
+				// Xóa con trỏ a
+				delete a;
+			}
+		}
+
+		// Không xảy ra trường hợp này, để đây để đề phòng bất trắc
+		else { 
+			
+		}
+
+		// push result vào output
+		output.push_back(result);
 	}
-	catch (int e)
-	{
-		cerr << "0" << endl;
-	}
-	cout << a->getBinaryType() << endl;
 
+	// Ghi output ra file output.txt
+	IOFile::writeToFile(Constants::outputFile, output);
+
+	return 0;
 }
