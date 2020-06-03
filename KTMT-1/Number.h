@@ -27,6 +27,8 @@ public:
 	static char getHexFromBinary(string bin);
 	static void toTwoComplement(vector<bool>& arrBits);
 	static void removeZeroPrefix(vector<bool>&);
+
+	static bool getSignOfNumber(vector<bool>& arrBits);
 };
 
 #endif // !NUMBER_H

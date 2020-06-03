@@ -24,8 +24,7 @@
     <ClInclude Include="QInt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-
-    <ClInclude Include="OverflowException.h">
+    <ClInclude Include="IOFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,6 +37,9 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IOFile.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
