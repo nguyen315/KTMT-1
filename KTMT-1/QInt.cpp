@@ -5,8 +5,6 @@
 #include "OverflowException.h"
 using namespace std;
 
-int flagMinus = 0;
-
 QInt::QInt(int type, string number)
 {
 	if (type == 2) {
@@ -29,7 +27,7 @@ string QInt::getBinaryType()
 		if (arrBits[i])
 			binaryString.push_back('1');
 
-		else 
+		else
 			binaryString.push_back('0');
 	}
 
@@ -231,17 +229,11 @@ QInt QInt::operator + (QInt& other) {
 	if (l1 > l2) {
 		longer = l1;
 		for (int i = l2; i <= l1; i++) {
-			if(flagMinus == 0) 
-				other.arrBits.insert(other.arrBits.begin(), false);
-			else 
-				other.arrBits.insert(other.arrBits.begin(), true);
+			other.arrBits.insert(other.arrBits.begin(), false);
 		}
-		if (flagMinus == 0) 
-			arrBits.insert(arrBits.begin(), false);
-		else 
-			arrBits.insert(arrBits.begin(), true);
+		arrBits.insert(arrBits.begin(), false);
 	}
-	else if(l1 < l2) {
+	else if (l1 < l2) {
 		longer = l2;
 		for (int i = l1; i <= l2; i++) {
 			arrBits.insert(arrBits.begin(), false);
@@ -250,17 +242,9 @@ QInt QInt::operator + (QInt& other) {
 	}
 	else {
 		longer = l1;
-		if (flagMinus == 0) {
-			arrBits.insert(arrBits.begin(), false);
-			other.arrBits.insert(other.arrBits.begin(), false);
-		}
-		else {
-			arrBits.insert(arrBits.begin(), true);
-			other.arrBits.insert(other.arrBits.begin(), true);
-		}
+		arrBits.insert(arrBits.begin(), false);
+		other.arrBits.insert(other.arrBits.begin(), false);
 	}
-	cout << this->getBinaryType() << endl;
-	cout << other.getBinaryType() << endl;
 	result.arrBits.resize(longer + 1);
 	for (int i = longer; i >= 0; i--) {
 		// both 0
@@ -300,9 +284,7 @@ QInt QInt::operator + (QInt& other) {
 			result.arrBits[0] = result.arrBits[0] + storeBit;
 		}
 	}
-	if(flagMinus == 1 && result.arrBits[0] == 1) result.arrBits[0] = 0;
 	Number::removeZeroPrefix(result.arrBits);
-	flagMinus = 0;
 	return result;
 }
 
@@ -310,10 +292,7 @@ QInt QInt::operator + (QInt& other) {
 QInt QInt::operator - (QInt& other) {
 	QInt reverse(2, "");
 	reverse = other;
-
 	Number::toTwoComplement(reverse.arrBits);
-
-	flagMinus = 1;
 	return *this + reverse;
 }
 
