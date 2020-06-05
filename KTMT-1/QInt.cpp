@@ -226,6 +226,21 @@ QInt QInt::operator + (QInt& other) {
 	QInt result(2, "");
 	bool storeBit = 0;
 	int longer = 0;
+
+	// = 1 khi cả 2 đều dương
+	bool bothPositive = (!Number::getSignOfNumber(this->arrBits)) & (!Number::getSignOfNumber(other.arrBits));
+
+	// = 1 khi cả 2 đều âm
+	bool bothNegative = Number::getSignOfNumber(this->arrBits) & Number::getSignOfNumber(other.arrBits);
+
+	// = 1 khi khác dấu
+	bool different = Number::getSignOfNumber(this->arrBits) ^ Number::getSignOfNumber(other.arrBits);
+
+	/*làm cho hai số bằng nhau sau đó thêm một bit 0 vào đầu hai số
+
+	Nếu cả 2 đều âm thì nếu bit một bằng 0 thì là overflow
+	Nếu cả 2 đều dương thì chạm vào bit 1 thì throw
+	Nếu khác dấu thì không throw vì input bảo đảm đúng thì số âm + số dương k bao giờ overflow*/
 	if (l1 > l2) {
 		longer = l1;
 		for (int i = l2; i <= l1; i++) {
@@ -245,47 +260,72 @@ QInt QInt::operator + (QInt& other) {
 		arrBits.insert(arrBits.begin(), false);
 		other.arrBits.insert(other.arrBits.begin(), false);
 	}
+
 	result.arrBits.resize(longer + 1);
+
+
 	for (int i = longer; i >= 0; i--) {
-		// both 0
-		if (arrBits[i] == 0 && other.arrBits[i] == 0) {
-			if (storeBit == 0) {
-				result.arrBits[i] = 0;
+
+		// Trường hợp overflow
+		if (i == 0) {
+			if (bothPositive) {
+				if (longer == Constants::maxLength - 1 && storeBit) {
+					throw 0;
+				}
 			}
-			else {
-				result.arrBits[i] = 1;
-				storeBit = 0;
+
+			else if (bothNegative) {
+				if (longer == Constants::maxLength && result.arrBits[1] == 0) {
+					throw 0;
+				}
 			}
+
+			result.arrBits[0] = storeBit;
 		}
-		// both 1
-		else if (arrBits[i] == 1 && other.arrBits[i] == 1) {
-			if (storeBit == 1) {
-				result.arrBits[i] = 1;
-			}
-			else {
-				result.arrBits[i] = 0;
-			}
-			storeBit = 1;
-		}
-		// diffirent
+
 		else {
-			if (storeBit == 1) {
-				result.arrBits[i] = 0;
+			// both 0
+			if (arrBits[i] == 0 && other.arrBits[i] == 0) {
+				if (storeBit == 0) {
+					result.arrBits[i] = 0;
+				}
+				else {
+					result.arrBits[i] = 1;
+					storeBit = 0;
+				}
+			}
+			// both 1
+			else if (arrBits[i] == 1 && other.arrBits[i] == 1) {
+				if (storeBit == 1) {
+					result.arrBits[i] = 1;
+				}
+				else {
+					result.arrBits[i] = 0;
+				}
 				storeBit = 1;
 			}
+			// diffirent
 			else {
-				result.arrBits[i] = 1;
+				if (storeBit == 1) {
+					result.arrBits[i] = 0;
+					storeBit = 1;
+				}
+				else {
+					result.arrBits[i] = 1;
+				}
 			}
 		}
-		if (i == 0) {
-			if (longer == 128 && storeBit == 1) {
-				throw 0;
-			}
-			result.arrBits[0] = result.arrBits[0] + storeBit;
-		}
+	
 	}
+
+	if (different || bothNegative) {
+		result.arrBits.erase(result.arrBits.begin());
+	}
+
 	Number::removeZeroPrefix(result.arrBits);
 	return result;
+
+	
 }
 
 
