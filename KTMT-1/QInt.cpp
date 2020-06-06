@@ -315,7 +315,7 @@ QInt QInt::operator + (QInt& other) {
 				}
 			}
 		}
-	
+
 	}
 
 	if (different || bothNegative) {
@@ -325,7 +325,7 @@ QInt QInt::operator + (QInt& other) {
 	Number::removeZeroPrefix(result.arrBits);
 	return result;
 
-	
+
 }
 
 
@@ -438,8 +438,8 @@ QInt QInt::operator*(QInt& other)
 		Number::toTwoComplement(secondArr);
 
 
-	QInt temp(2, "");
-	QInt sum(2, "");
+	QInt temp(2, "0");
+	QInt sum(2, "0");
 
 	for (int i = firstArr.size() - 1; i >= 0; i--)
 	{
@@ -448,6 +448,39 @@ QInt QInt::operator*(QInt& other)
 		else continue;
 
 		temp << firstArr.size() - 1 - i;
+
+		if (temp.arrBits.size() == Constants::maxLength) {
+
+			// Nếu 2 số khác dấu thì có thể đụng tới bit cao nhất 
+			if (Number::getSignOfNumber(arrBits) ^ Number::getSignOfNumber(other.arrBits)) {
+				QInt c(2, "0");
+				try {
+					c = sum + temp;
+					Number::removeZeroPrefix(c.arrBits);
+				}
+				catch (int e) {
+					throw e;
+				}
+
+				// thiết đặt số QInt min
+				QInt min(2, "0");
+				while (min.arrBits.size() < Constants::maxLength)
+					min.arrBits.push_back(0);
+				min.arrBits[0] = 1;
+
+				// đụng tới bit cao nhất, nếu không phải là QInt min hoặc không phải vòng lặp cuối cùng thì throw
+				if (c.arrBits == min.arrBits && i == 0) {
+					return c;
+				}
+				else
+					throw 0;
+			}
+
+			else
+				throw 0;
+		}
+
+
 
 		try
 		{
@@ -474,15 +507,18 @@ QInt QInt::operator/(QInt& other)
 	QInt Quotient(2, "");
 	QInt Remainder(2, "");
 
-	if (Number::getSignOfNumber(arrBits) == 1)
-		Number::toTwoComplement(arrBits);
+	vector<bool> devidend = arrBits;
+	vector<bool> devisor = other.arrBits;
 
-	if (Number::getSignOfNumber(other.arrBits) == 1)
-		Number::toTwoComplement(other.arrBits);
+	if (Number::getSignOfNumber(devidend) == 1)
+		Number::toTwoComplement(devidend);
 
-	for (int i = 0; i < arrBits.size(); i++)
+	if (Number::getSignOfNumber(devisor) == 1)
+		Number::toTwoComplement(devisor);
+
+	for (int i = 0; i < devidend.size(); i++)
 	{
-		Remainder.arrBits.push_back(arrBits[i]);
+		Remainder.arrBits.push_back(devidend[i]);
 
 		if (Remainder < other)
 		{
@@ -509,6 +545,8 @@ QInt QInt::operator/(QInt& other)
 
 bool QInt::operator>(QInt& other)
 {
+	Number::removeZeroPrefix(this->arrBits);
+	Number::removeZeroPrefix(other.arrBits);
 	if (arrBits.size() > other.arrBits.size())
 		return true;
 	else if (arrBits.size() == other.arrBits.size())
@@ -521,6 +559,8 @@ bool QInt::operator>(QInt& other)
 
 bool QInt::operator<(QInt& other)
 {
+	Number::removeZeroPrefix(this->arrBits);
+	Number::removeZeroPrefix(other.arrBits);
 	if (arrBits.size() < other.arrBits.size())
 		return true;
 	else if (arrBits.size() == other.arrBits.size())
