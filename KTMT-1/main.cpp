@@ -5,45 +5,22 @@
 
 using namespace std;
 
+// Sửa file input và ouput trong Constants.h
+
+
 int main() {
+	// Mở file để ghi dữ liệu
+	ofstream outfile(Constants::outputFile);
+	if (!outfile.is_open()) {
+		cout << "Can not open output file" << endl;
+		return 0;
+	}
 
-	// Test phần input và output
-	// Sửa maxlength trong constant thành 8 bit cho dễ test ## 2^7 = 128
 
-	//QInt* a;
-	//a = new QInt(2, "11111110");
-	//cout << a->getBinaryType() << endl;
-	////cout << a->getDecimalType() << endl;
-	//cout << a->getHexaType() << endl;
-	//delete a;
-	//a = new QInt(10, "-120");
-	//cout << a->getBinaryType() << endl;
-	//cout << a->getHexaType() << endl;
-	///*cout << a->getDecimalType() << endl;*/
-	//delete a;
-	//a = new QInt(16, "7F");
-	//cout << a->getBinaryType() << endl;
-	//cout << a->getDecimalType() << endl;
-	//delete a;
-
-	//QInt a(2, "11011");
-	//QInt b(2, "111");
-	//QInt c = a - b;
-	//cout << c.getBinaryType() << endl;
 
 	// a, b để đọc dữ liệu, c để chứa kết quả
 	QInt* a, * b;
-	QInt c(2, "");
-
-
-
-	// dùng để test
-	/*a = new QInt(2, "100");
-	b = new QInt(2, "11111110");
-
-	~*b;
-	cout << b->getBinaryType() << endl;*/
-
+	QInt c(2, "0");
 
 
 
@@ -67,13 +44,13 @@ int main() {
 		int numberOfShift = 0;
 
 		if (splittedString.size() == 4) {
-		
+
 			// Chuyển từ string sang int
 			typeOfInput = typeOfOutput = atoi(splittedString[0].c_str());
 
 			typeOfOperator = splittedString[2];
 
-			if (typeOfOperator == "&" || typeOfOperator == "|" || typeOfOperator == "^" || typeOfOperator == "+" || typeOfOperator == "-"|| 
+			if (typeOfOperator == "&" || typeOfOperator == "|" || typeOfOperator == "^" || typeOfOperator == "+" || typeOfOperator == "-" ||
 				typeOfOperator == "*" || typeOfOperator == "/") {
 
 				a = new QInt(typeOfInput, splittedString[1]);
@@ -137,7 +114,7 @@ int main() {
 				a = new QInt(typeOfInput, splittedString[1]);
 				numberOfShift = atoi(splittedString[3].c_str());
 				typeOfOperator = splittedString[2];
-				
+
 				if (typeOfOperator == ">>") {
 					*a >> numberOfShift;
 				}
@@ -145,7 +122,7 @@ int main() {
 					*a << numberOfShift;
 				}
 
-				// Ghi kết quả vào vector ouput
+				// Ghi kết quả vào string result
 				result = IOFile::writeOutput(typeOfOutput, *a);
 
 				// Xóa con trỏ a
@@ -155,8 +132,10 @@ int main() {
 
 
 		// Các phép toán ror, rol, ~, và chuyển hệ số
-		else if (splittedString.size() == 3) { 
+		else if (splittedString.size() == 3) {
+
 			typeOfOperator = splittedString[1];
+
 			if (typeOfOperator == "ror" || typeOfOperator == "rol" || typeOfOperator == "~") {
 				// Chuyển từ string sang int
 				typeOfInput = typeOfOutput = atoi(splittedString[0].c_str());
@@ -175,7 +154,7 @@ int main() {
 					~*a;
 				}
 
-				// Ghi kết quả vào vector ouput
+				// Ghi kết quả vào string result
 				result = IOFile::writeOutput(typeOfOutput, *a);
 
 				// Xóa con trỏ a
@@ -188,7 +167,7 @@ int main() {
 
 				a = new QInt(typeOfInput, splittedString[2]);
 
-				// Ghi kết quả vào vector ouput
+				// Ghi kết quả vào string result
 				result = IOFile::writeOutput(typeOfOutput, *a);
 
 				// Xóa con trỏ a
@@ -197,18 +176,20 @@ int main() {
 		}
 
 		// Không xảy ra trường hợp này, để đây để đề phòng bất trắc
-		else { 
-			
+		else {
+			outfile << 0 << endl;
 		}
 
 		// push result vào output
-		output.push_back(result);
+		outfile << result << endl;
 	}
 
-	// Ghi output ra file output.txt
-	IOFile::writeToFile(Constants::outputFile, output);
+
+	outfile.close();
 
 	return 0;
+
+
 }
 
 

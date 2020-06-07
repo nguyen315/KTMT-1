@@ -14,7 +14,7 @@ class IOFile
 {
 public:
 	static vector<string> readFile(string inputFile);
-	static void writeToFile(string outputFile, vector<string>& output);
+	//static void writeToFile(string outputFile, vector<string>& output);
 	static vector<string> splitString(string input);
 	static string writeOutput(int typeOfOutput, QInt& x);
 };
