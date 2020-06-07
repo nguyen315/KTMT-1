@@ -66,11 +66,11 @@ vector<bool> Number::inputHexa(string number)
 	bool overflowCase = false;
 	bool isNegative = false;
 
-	// Nếu là số âm thì đổi dấu thành số dương và đánh dấu là âm
-	if (number[0] == '-') {
-		isNegative = true;
-		number.erase(0, 1);
-	}
+	//// Nếu là số âm thì đổi dấu thành số dương và đánh dấu là âm
+	//if (number[0] == '-') {
+	//	isNegative = true;
+	//	number.erase(0, 1);
+	//}
 
 
 	vector<bool> arrBits;
@@ -85,21 +85,21 @@ vector<bool> Number::inputHexa(string number)
 	// Xử lý các số 0 ở đầu
 	Number::removeZeroPrefix(arrBits);
 
-	// Trường hợp overflow
-	// Nếu số dương đụng tới bit cao nhất thì sẽ overflow
-	if (arrBits.size() >= Constants::maxLength) {
-		overflowCase = true;
-		vector <bool> foo(Constants::maxLength - 1, 1); // tạo vector với maxlength - 1 số 1
-		arrBits = foo;
-	}
-	if (isNegative) {
-		if (overflowCase) {
-			vector <bool> foo(Constants::maxLength - 1, 0); // tạo vector với maxlength - 1 số 0
-			arrBits = foo;
-			arrBits.insert(arrBits.begin(), 1);
-		}
-		else toTwoComplement(arrBits);
-	}
+	//// Trường hợp overflow
+	//// Nếu số dương đụng tới bit cao nhất thì sẽ overflow
+	//if (arrBits.size() >= Constants::maxLength) {
+	//	overflowCase = true;
+	//	vector <bool> foo(Constants::maxLength - 1, 1); // tạo vector với maxlength - 1 số 1
+	//	arrBits = foo;
+	//}
+	//if (isNegative) {
+	//	if (overflowCase) {
+	//		vector <bool> foo(Constants::maxLength - 1, 0); // tạo vector với maxlength - 1 số 0
+	//		arrBits = foo;
+	//		arrBits.insert(arrBits.begin(), 1);
+	//	}
+	//	else toTwoComplement(arrBits);
+	//}
 
 
 	return arrBits;
@@ -220,7 +220,6 @@ void Number::toTwoComplement(vector<bool>& arrBits) {
 
 	bool sign = Number::getSignOfNumber(arrBits);
 
-
 	int pos = -1;
 	for (int i = arrBits.size() - 1; i >= 0; i--) {
 		if (arrBits[i]) {
@@ -232,8 +231,6 @@ void Number::toTwoComplement(vector<bool>& arrBits) {
 		arrBits[i] = !arrBits[i];
 	}
 
-	// Xử lý các số 0 ở đầu
-	Number::removeZeroPrefix(arrBits);
 
 
 	// trường hợp số 0
@@ -249,6 +246,9 @@ void Number::toTwoComplement(vector<bool>& arrBits) {
 		}
 	}
 
+
+	// Xử lý các số 0 ở đầu
+	Number::removeZeroPrefix(arrBits);
 }
 
 void Number::removeZeroPrefix(vector<bool>& arrBits)

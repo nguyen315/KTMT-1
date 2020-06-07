@@ -16,26 +16,26 @@ vector<string> IOFile::readFile(string inputFile)
 	}
 
 	else {
-		cout << "Can not open file" << endl;
+		cout << "Can not open input file" << endl;
 	}
 	return input;
 }
 
-void IOFile::writeToFile(string outputFile, vector<string>& output)
-{
-	ofstream outfile(outputFile);
-	if (outfile.is_open()) {
-		for (int i = 0; i < output.size(); i++) {
-			outfile << output[i] << endl;
-		}
-
-		outfile.close();
-	}
-
-	else {
-		cout << "Can not open output file" << endl;
-	}
-}
+//void IOFile::writeToFile(string outputFile, vector<string>& output)
+//{
+//	ofstream outfile(outputFile);
+//	if (outfile.is_open()) {
+//		for (int i = 0; i < output.size(); i++) {
+//			outfile << output[i] << endl;
+//		}
+//
+//		outfile.close();
+//	}
+//
+//	else {
+//		cout << "Can not open output file" << endl;
+//	}
+//}
 
 vector<string> IOFile::splitString(string input)
 {

@@ -22,6 +22,8 @@ string QInt::getBinaryType()
 {
 	string binaryString = "";
 
+	Number::removeZeroPrefix(this->arrBits);
+
 	for (int i = 0; i < arrBits.size(); i++) {
 
 		if (arrBits[i])
@@ -57,9 +59,12 @@ string QInt::getDecimalType()
 		}
 	}
 
-	// Nếu là số âm thì thêm dấu trừ phía trước
-	if (isNegative)
+	// Nếu là số âm thì thêm dấu trừ phía trước và lấy bù 2 lại để thành số cũ
+	if (isNegative) {
 		result.insert(0, 1, '-');
+		Number::toTwoComplement(arrBits);
+	}
+		
 
 	return result;
 }
@@ -69,14 +74,10 @@ string QInt::getHexaType() {
 	bool isNegative = false;
 	char hex;
 
-	// Nếu là số âm thì lấy bù 2 lại để thành số dương
-	if ((arrBits.size() == Constants::maxLength) && arrBits[0]) {
-		isNegative = true;
-		Number::toTwoComplement(arrBits);
-	}
 
-	// Đưa số dương vào result
 	int i = arrBits.size() - 1;
+
+
 	while (i >= 0) {
 		bin.insert(0, to_string(arrBits[i]));
 
@@ -100,10 +101,6 @@ string QInt::getHexaType() {
 		hex = Number::getHexFromBinary(bin);
 		result.insert(0, 1, hex);
 	}
-
-	// Nếu là số âm thì insert thêm dấu -
-	if (isNegative)
-		result.insert(0, 1, '-');
 
 	return result;
 }
@@ -201,15 +198,19 @@ void QInt::rol() {
 
 void QInt::ror() {
 	int n = arrBits.size();
+
+
 	if (arrBits.size() < Constants::maxLength) {
 		if (arrBits.back() == true) {
-			for (int i = 0; i <= Constants::maxLength - n; i++) {
+			for (int i = 0; i < Constants::maxLength - n; i++) {
 				arrBits.insert(arrBits.begin(), false);
 			}
-			arrBits.insert(arrBits.begin(), false);
+			arrBits.insert(arrBits.begin(), true);
 		}
 		arrBits.pop_back();
 	}
+
+
 
 	else if (arrBits.size() == Constants::maxLength) {
 		bool bit_Ror = arrBits.at(arrBits.size() - 1);
@@ -447,6 +448,9 @@ QInt QInt::operator*(QInt& other)
 			temp.arrBits = secondArr;
 		else continue;
 
+		if (temp.arrBits.size() + firstArr.size() - 1 - i > Constants::maxLength) // kiểm tra xem có dịch quá max length hay không
+			throw 0;
+
 		temp << firstArr.size() - 1 - i;
 
 		if (temp.arrBits.size() == Constants::maxLength) {
@@ -504,6 +508,13 @@ QInt QInt::operator*(QInt& other)
 
 QInt QInt::operator/(QInt& other)
 {
+
+	bool sign = false;
+
+	if (other.getDecimalType().compare("0") == 0)
+		return QInt(2, "0");
+
+
 	QInt Quotient(2, "");
 	QInt Remainder(2, "");
 
@@ -515,6 +526,13 @@ QInt QInt::operator/(QInt& other)
 
 	if (Number::getSignOfNumber(devisor) == 1)
 		Number::toTwoComplement(devisor);
+
+	
+	if (Number::getSignOfNumber(other.arrBits)) {
+		sign = true;
+		Number::toTwoComplement(other.arrBits);
+	}
+
 
 	for (int i = 0; i < devidend.size(); i++)
 	{
@@ -531,9 +549,17 @@ QInt QInt::operator/(QInt& other)
 		}
 	}
 
+
+	if (sign) {
+		Number::toTwoComplement(other.arrBits);
+	}
+
+
 	if (Number::getSignOfNumber(arrBits) ^ Number::getSignOfNumber(other.arrBits))
 	{
+		
 		Number::toTwoComplement(Quotient.arrBits);
+
 	}
 
 	Number::removeZeroPrefix(Quotient.arrBits);
